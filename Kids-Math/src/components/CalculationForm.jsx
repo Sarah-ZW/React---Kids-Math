@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { MathTypeContext, SkillContext } from "../App"
 
 export function CalculationForm() {
@@ -6,9 +6,26 @@ export function CalculationForm() {
   const { mathType, setMathType } = useContext(MathTypeContext)
   const answerRef = useRef(null)
 
+  useEffect(() => {
+    answerRef.current.focus()
+  }, [setSkillLevel])
+
   const randomNumber1 = Math.floor(Math.random() * skillLevel.multiplier)
   const randomNumber2 = Math.floor(Math.random() * skillLevel.multiplier)
   const operation = mathType.operation
+  const divisibleNumber = generateDivisibleNumber()
+
+  function generateDivisibleNumber() {
+    let divisibleNumber
+    do {
+      divisibleNumber = generateRandomNumber()
+    } while (randomNumber1 % divisibleNumber != 0)
+    return divisibleNumber
+  }
+
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * skillLevel.multiplier)
+  }
 
   function onSubmit(e) {
     e.preventDefault()
@@ -27,7 +44,7 @@ export function CalculationForm() {
         correctResult = randomNumber1 * randomNumber2
         break
       case "/":
-        correctResult = randomNumber1 / randomNumber2
+        correctResult = randomNumber1 / divisibleNumber
         break
     }
 
@@ -39,6 +56,7 @@ export function CalculationForm() {
       alert("Whoops try again!")
     }
     answerRef.current.value = ""
+    console.log(correctResult)
 
     if (isCorrect) {
       //setting state just to force rerender to create new random #'s
@@ -58,7 +76,12 @@ export function CalculationForm() {
 
         <div className="labelInput">
           <label htmlFor="box2">Number</label>
-          <input type="number" value={randomNumber2} disabled id="box2" />
+          <input
+            type="number"
+            value={operation === "/" ? divisibleNumber : randomNumber2}
+            disabled
+            id="box2"
+          />
         </div>
 
         <div className="operator">=</div>
