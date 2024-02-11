@@ -11,8 +11,16 @@
       font-size: 20px;
       font-weight: bold;
       margin-right: 10px;
+
+      &:hover {
+        cursor: pointer;
+      }
+     
       
       &.yellowBorder {
         border: solid 5px $yellow;
+      }
+      &.active {
+        border: solid 5px $lime;
       }
     }

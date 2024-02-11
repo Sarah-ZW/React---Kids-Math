@@ -12,46 +12,65 @@ export function CalculationForm() {
 
   function onSubmit(e) {
     e.preventDefault()
-    
-    let correctResult
 
-    switch(operation) {
-      case '+':
+    let correctResult
+    let isCorrect
+
+    switch (operation) {
+      case "+":
         correctResult = randomNumber1 + randomNumber2
-      break
-      case '-':
+        break
+      case "-":
         correctResult = randomNumber1 - randomNumber2
         break
-      case '*':
+      case "x":
         correctResult = randomNumber1 * randomNumber2
         break
-      case '/':
+      case "/":
         correctResult = randomNumber1 / randomNumber2
         break
     }
 
     if (parseInt(answerRef.current.value, 10) === correctResult) {
+      isCorrect = true
       alert("You're correct!")
     } else {
+      isCorrect = false
       alert("Whoops try again!")
     }
-    answerRef.current.value = ''
-    //todo refresh the page
+    answerRef.current.value = ""
+
+    if (isCorrect) {
+      //setting state just to force rerender to create new random #'s
+      setSkillLevel({ ...skillLevel })
+    }
   }
 
   return (
     <>
-    <div>{mathType.type}</div>
       <form className="form" onSubmit={onSubmit}>
-        <label htmlFor="box1">Number</label>
-        <input value={randomNumber1} type="number" disabled id="box1" />
-        <label htmlFor="box2">Number</label>
-        <input type="number" value={randomNumber2} disabled id="box2" />
-        <div>=</div>
-        <label htmlFor="answerBox">Answer (numbers only)</label>
-        <input type="number" id="answerBox" ref={answerRef} />
+        <div className="labelInput">
+          <label htmlFor="box1">Number</label>
+          <input value={randomNumber1} type="number" disabled id="box1" />
+        </div>
 
-        <button type="submit">Submit</button>
+        <div className="operator">{operation}</div>
+
+        <div className="labelInput">
+          <label htmlFor="box2">Number</label>
+          <input type="number" value={randomNumber2} disabled id="box2" />
+        </div>
+
+        <div className="operator">=</div>
+
+        <div className="labelInput">
+          <label htmlFor="answerBox">Answer</label>
+          <input type="number" id="answerBox" ref={answerRef} />
+        </div>
+
+        <button className="submit" type="submit">
+          Submit
+        </button>
       </form>
     </>
   )
